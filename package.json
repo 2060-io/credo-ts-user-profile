@@ -1,7 +1,7 @@
 {
-  "name": "aries-javascript-user-profile",
+  "name": "aries-framework-user-profile",
   "version": "0.0.0",
-  "description": "User Profile protocol implementation for @aries-framework/core",
+  "description": "User Profile protocol implementation for aries-framework-javascript",
   "author": "2060.io",
   "homepage": "https://github.com/2060-io/aries-javascript-receipts",
   "license": "ISC",
@@ -15,6 +15,9 @@
     "clean": "rimraf -rf ./build",
     "compile": "tsc -p tsconfig.build.json",
     "prepublishOnly": "yarn run build",
+    "check-types": "tsc --noEmit -p tsconfig.build.json",
+    "check-format": "yarn prettier --check",
+    "prettier": "prettier --ignore-path .gitignore '**/*.+(js|json|ts|md|yml|yaml)'",
     "release": "release-it"
   },
   "repository": {
@@ -27,7 +30,7 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
-  },  
+  },
   "devDependencies": {
     "@aries-framework/node": "^0.3.0",
     "@types/jest": "^26.0.23",

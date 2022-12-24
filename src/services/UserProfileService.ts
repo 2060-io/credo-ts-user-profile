@@ -172,7 +172,7 @@ export class UserProfileService {
   public async processGetProfile(messageContext: InboundMessageContext<GetProfileMessage>) {
     const connection = messageContext.assertReadyConnection()
 
-    const policyId = connection.getTag('communicationPolicyId') as string ?? null
+    const policyId = (connection.getTag('communicationPolicyId') as string) ?? null
     if (policyId) {
       const policy = await this.communicationPolicyService.findById(messageContext.agentContext, policyId)
 
