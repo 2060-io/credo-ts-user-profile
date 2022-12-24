@@ -1,4 +1,4 @@
-# User Profile plug-in for Aries Framework JavaScript 
+# User Profile plug-in for Aries Framework JavaScript
 
 This module is used to provide an Aries Agent built with Aries Framework JavaScript means to manage [User Profile protocol](https://github.com/2060-io/aries-rfcs/tree/feature/user-profile/features/xxxx-user-profile).
 
