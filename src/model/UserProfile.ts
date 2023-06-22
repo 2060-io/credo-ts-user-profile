@@ -1,3 +1,11 @@
+import { Exclude, Transform, TransformationType } from 'class-transformer'
+
+export interface DisplayPictureData {
+  mimeType?: string
+  links?: string[]
+  base64?: string
+}
+
 export class UserProfile {
   public type?: string
   public category?: string

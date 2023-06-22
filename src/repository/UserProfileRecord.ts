@@ -1,9 +1,10 @@
 import { BaseRecord } from '@aries-framework/core'
+import { DisplayPictureData } from '../model'
 import { v4 as uuid } from 'uuid'
 
 export interface UserProfileData {
   displayName?: string
-  displayPicture?: string
+  displayPicture?: DisplayPictureData
   description?: string
   defaultCommunicationPolicyId?: string
 }
@@ -15,7 +16,7 @@ export interface UserProfileStorageProps extends UserProfileData {
 
 export class UserProfileRecord extends BaseRecord implements UserProfileStorageProps {
   public displayName?: string
-  public displayPicture?: string
+  public displayPicture?: DisplayPictureData
   public description?: string
   public defaultCommunicationPolicyId?: string
 

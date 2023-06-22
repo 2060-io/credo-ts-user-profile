@@ -28,7 +28,7 @@ export interface UserProfileUpdatedEvent extends BaseEvent {
 export interface ConnectionProfileUpdatedEvent extends BaseEvent {
   type: ProfileEventTypes.ConnectionProfileUpdated
   payload: {
-    profile: UserProfile
+    profile: UserProfileData
     connection: ConnectionRecord
   }
 }

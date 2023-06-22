@@ -19,7 +19,7 @@ import {
 } from './UserProfileEvents'
 import { CommunicationPolicyService } from './CommunicationPolicyService'
 import { RequestProfileMessage, GetProfileMessageOptions, ProfileMessage, ProfileMessageOptions } from '../messages'
-import { getConnectionProfile, setConnectionProfile, UserProfile } from '../model'
+import { getConnectionProfile, setConnectionProfile } from '../model'
 
 @scoped(Lifecycle.ContainerScoped)
 export class UserProfileService {
@@ -131,16 +131,26 @@ export class UserProfileService {
     let currentProfile = getConnectionProfile(connection)
     const receivedProfile = messageContext.message.profile
 
+    const displayPictureData = receivedProfile.displayPicture
+      ? messageContext.message.getAppendedAttachmentById('displayPicture')
+      : undefined
+
     // TODO: use composed objects
+    const newProfile: UserProfileData = {
+      ...receivedProfile,
+      displayPicture: {
+        mimeType: displayPictureData?.mimeType,
+        base64: displayPictureData?.data.base64,
+        links: displayPictureData?.data.links,
+      },
+    }
     if (currentProfile) {
-      Object.assign(currentProfile, receivedProfile)
+      Object.assign(currentProfile, newProfile)
     } else {
-      currentProfile = receivedProfile
+      currentProfile = newProfile
     }
 
     setConnectionProfile(connection, currentProfile ?? {})
-
-    connection.setTags({ type: currentProfile?.type })
 
     await this.connectionService.update(agentContext, connection)
 
@@ -199,7 +209,7 @@ export class UserProfileService {
     threadId: string
   ) {
     const userProfile = await this.getUserProfile(agentContext)
-    const profile: UserProfile = {
+    const profile: UserProfileData = {
       displayName: userProfile.displayName,
       displayPicture: userProfile.displayPicture,
       description: userProfile.description,

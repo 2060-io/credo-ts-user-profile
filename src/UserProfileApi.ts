@@ -32,7 +32,10 @@ export class UserProfileApi {
     this.userProfileService = userProfileService
     this.communicationPolicyService = communicationPolicyService
 
-    this.agentContext.dependencyManager.registerMessageHandlers([new ProfileHandler(this.userProfileService), new RequestProfileHandler(this.userProfileService)])
+    this.agentContext.dependencyManager.registerMessageHandlers([
+      new ProfileHandler(this.userProfileService),
+      new RequestProfileHandler(this.userProfileService),
+    ])
   }
 
   public async requestUserProfile(connection: ConnectionRecord) {
@@ -118,5 +121,4 @@ export class UserProfileApi {
   public async getDefaultCommunicationPolicy() {
     return await this.userProfileService.getDefaultCommunicationPolicy(this.agentContext)
   }
-
 }
