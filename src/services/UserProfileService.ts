@@ -18,8 +18,8 @@ import {
   UserProfileUpdatedEvent,
 } from './UserProfileEvents'
 import { CommunicationPolicyService } from './CommunicationPolicyService'
-import { GetProfileMessage, GetProfileMessageOptions, ProfileMessage, ProfileMessageOptions } from '../messages'
-import { getConnectionProfile, setConnectionProfile, ConnectionProfile, ConnectionType } from '../model'
+import { RequestProfileMessage, GetProfileMessageOptions, ProfileMessage, ProfileMessageOptions } from '../messages'
+import { getConnectionProfile, setConnectionProfile, UserProfile } from '../model'
 
 @scoped(Lifecycle.ContainerScoped)
 export class UserProfileService {
@@ -163,13 +163,13 @@ export class UserProfileService {
     return message
   }
 
-  public async createGetProfileMessage(options: GetProfileMessageOptions) {
-    const message = new GetProfileMessage(options)
+  public async createRequestProfileMessage(options: GetProfileMessageOptions) {
+    const message = new RequestProfileMessage(options)
 
     return message
   }
 
-  public async processGetProfile(messageContext: InboundMessageContext<GetProfileMessage>) {
+  public async processRequestProfile(messageContext: InboundMessageContext<RequestProfileMessage>) {
     const connection = messageContext.assertReadyConnection()
 
     const policyId = (connection.getTag('communicationPolicyId') as string) ?? null
@@ -199,12 +199,10 @@ export class UserProfileService {
     threadId: string
   ) {
     const userProfile = await this.getUserProfile(agentContext)
-    const profile: ConnectionProfile = {
-      type: ConnectionType.User,
+    const profile: UserProfile = {
       displayName: userProfile.displayName,
       displayPicture: userProfile.displayPicture,
       description: userProfile.description,
-      commChannels: ['text'], // FIXME
     }
 
     const message = this.createProfileMessage({

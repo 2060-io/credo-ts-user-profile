@@ -1,11 +1,11 @@
 import { AgentMessage, IsValidMessageType, parseMessageType } from '@aries-framework/core'
 import { Expose } from 'class-transformer'
 import { IsBoolean, IsOptional } from 'class-validator'
-import { ConnectionProfile } from '../model'
+import { UserProfile } from '../model'
 
 export interface ProfileMessageOptions {
   id?: string
-  profile: Partial<ConnectionProfile>
+  profile: Partial<UserProfile>
   threadId?: string
   sendBackYours?: boolean
 }
@@ -26,10 +26,9 @@ export class ProfileMessage extends AgentMessage {
 
   @IsValidMessageType(ProfileMessage.type)
   public readonly type = ProfileMessage.type.messageTypeUri
-  public static readonly type = parseMessageType('https://2060.io/didcomm/user-profile/0.1/profile')
+  public static readonly type = parseMessageType('https://didcomm.org/user-profile/1.0/profile')
 
-  @Expose({ name: 'profile' })
-  public profile?: ConnectionProfile
+  public profile!: UserProfile
 
   @IsOptional()
   @IsBoolean()

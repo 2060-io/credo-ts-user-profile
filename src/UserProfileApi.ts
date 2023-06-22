@@ -7,8 +7,7 @@ import {
   ConnectionRecord,
   OutboundMessageContext,
 } from '@aries-framework/core'
-import { ProfileHandler, GetProfileHandler } from './handlers'
-import { ConnectionType } from './model'
+import { ProfileHandler, RequestProfileHandler } from './handlers'
 import { CommunicationPolicyBaseProps, CommunicationPolicyRecord, UserProfileData } from './repository'
 import { UserProfileService } from './services'
 import { CommunicationPolicyService } from './services/CommunicationPolicyService'
@@ -17,7 +16,6 @@ import { CommunicationPolicyService } from './services/CommunicationPolicyServic
 export class UserProfileApi {
   private messageSender: MessageSender
   private userProfileService: UserProfileService
-  private connectionService: ConnectionService
   private communicationPolicyService: CommunicationPolicyService
   private agentContext: AgentContext
 
@@ -32,28 +30,26 @@ export class UserProfileApi {
     this.agentContext = agentContext
     this.messageSender = messageSender
     this.userProfileService = userProfileService
-    this.connectionService = connectionService
     this.communicationPolicyService = communicationPolicyService
-    this.registerHandlers(dispatcher)
+
+    this.agentContext.dependencyManager.registerMessageHandlers([new ProfileHandler(this.userProfileService), new RequestProfileHandler(this.userProfileService)])
   }
 
-  public async requestConnectionProfile(connection: ConnectionRecord) {
-    const message = await this.userProfileService.createGetProfileMessage({})
+  public async requestUserProfile(connection: ConnectionRecord) {
+    const message = await this.userProfileService.createRequestProfileMessage({})
 
     await this.messageSender.sendMessage(
       new OutboundMessageContext(message, { agentContext: this.agentContext, connection })
     )
   }
 
-  public async sendConnectionProfile(connection: ConnectionRecord, sendBackYours?: boolean) {
+  public async sendUserProfile(connection: ConnectionRecord, sendBackYours?: boolean) {
     const myProfile = await this.userProfileService.getUserProfile(this.agentContext)
     const message = await this.userProfileService.createProfileMessage({
       profile: {
         displayName: myProfile.displayName,
         displayPicture: myProfile.displayPicture,
         description: myProfile.description,
-        type: ConnectionType.User,
-        commChannels: ['text'],
       },
       sendBackYours,
     })
@@ -123,8 +119,4 @@ export class UserProfileApi {
     return await this.userProfileService.getDefaultCommunicationPolicy(this.agentContext)
   }
 
-  private registerHandlers(dispatcher: Dispatcher) {
-    dispatcher.registerMessageHandler(new ProfileHandler(this.userProfileService))
-    dispatcher.registerMessageHandler(new GetProfileHandler(this.userProfileService))
-  }
 }

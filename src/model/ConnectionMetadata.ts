@@ -1,10 +1,10 @@
 import { ConnectionRecord, JsonTransformer } from '@aries-framework/core'
-import { ConnectionProfile } from './ConnectionProfile'
+import { UserProfile } from './UserProfile'
 
 export const getConnectionProfile = (record: ConnectionRecord) =>
-  record.metadata.get('ConnectionProfile')
-    ? JsonTransformer.fromJSON(record.metadata.get('ConnectionProfile'), ConnectionProfile)
+  record.metadata.get('UserProfile')
+    ? JsonTransformer.fromJSON(record.metadata.get('UserProfile'), UserProfile)
     : undefined
 
-export const setConnectionProfile = (record: ConnectionRecord, metadata: ConnectionProfile) =>
-  record.metadata.add('ConnectionProfile', JsonTransformer.toJSON(metadata))
+export const setConnectionProfile = (record: ConnectionRecord, metadata: UserProfile) =>
+  record.metadata.add('UserProfile', JsonTransformer.toJSON(metadata))

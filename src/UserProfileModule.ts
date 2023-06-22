@@ -21,7 +21,7 @@ export class UserProfileModule implements Module {
     // Feature Registry
     featureRegistry.register(
       new Protocol({
-        id: 'https://2060.io/didcomm/user-profile/0.1',
+        id: 'https://didcomm.org/user-profile/1.0',
       })
     )
   }

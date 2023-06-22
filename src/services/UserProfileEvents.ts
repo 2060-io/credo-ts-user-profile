@@ -1,5 +1,5 @@
 import { BaseEvent, ConnectionRecord } from '@aries-framework/core'
-import { ConnectionProfile } from '../model'
+import { UserProfile } from '../model'
 import { ConnectionProfileKey } from '../messages'
 import { UserProfileData, UserProfileRecord } from '../repository'
 
@@ -28,7 +28,7 @@ export interface UserProfileUpdatedEvent extends BaseEvent {
 export interface ConnectionProfileUpdatedEvent extends BaseEvent {
   type: ProfileEventTypes.ConnectionProfileUpdated
   payload: {
-    profile: ConnectionProfile
+    profile: UserProfile
     connection: ConnectionRecord
   }
 }

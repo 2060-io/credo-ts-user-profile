@@ -1,6 +1,6 @@
 import { AgentMessage, IsValidMessageType, parseMessageType } from '@aries-framework/core'
 import { Expose } from 'class-transformer'
-import { ConnectionProfile } from '../model'
+import { UserProfile } from '../model'
 
 export interface GetProfileMessageOptions {
   id?: string
@@ -8,9 +8,9 @@ export interface GetProfileMessageOptions {
   query?: ConnectionProfileKey[]
 }
 
-export type ConnectionProfileKey = keyof ConnectionProfile
+export type ConnectionProfileKey = keyof UserProfile
 
-export class GetProfileMessage extends AgentMessage {
+export class RequestProfileMessage extends AgentMessage {
   public constructor(options?: GetProfileMessageOptions) {
     super()
 
@@ -23,10 +23,9 @@ export class GetProfileMessage extends AgentMessage {
     }
   }
 
-  @IsValidMessageType(GetProfileMessage.type)
-  public readonly type = GetProfileMessage.type.messageTypeUri
-  public static readonly type = parseMessageType('https://2060.io/didcomm/user-profile/0.1/get-profile')
+  @IsValidMessageType(RequestProfileMessage.type)
+  public readonly type = RequestProfileMessage.type.messageTypeUri
+  public static readonly type = parseMessageType('https://didcomm.org/user-profile/1.0/request-profile')
 
-  @Expose({ name: 'query' })
   public query?: ConnectionProfileKey[]
 }
