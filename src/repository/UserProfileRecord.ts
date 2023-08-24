@@ -6,7 +6,6 @@ export interface UserProfileData {
   displayName?: string
   displayPicture?: DisplayPictureData
   description?: string
-  defaultCommunicationPolicyId?: string
 }
 
 export interface UserProfileStorageProps extends UserProfileData {
@@ -18,7 +17,6 @@ export class UserProfileRecord extends BaseRecord implements UserProfileStorageP
   public displayName?: string
   public displayPicture?: DisplayPictureData
   public description?: string
-  public defaultCommunicationPolicyId?: string
 
   public static readonly type = 'UserProfileRecord'
   public readonly type = UserProfileRecord.type

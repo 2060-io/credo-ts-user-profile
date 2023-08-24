@@ -1,5 +1,4 @@
 import { BaseEvent, ConnectionRecord } from '@aries-framework/core'
-import { UserProfile } from '../model'
 import { ConnectionProfileKey } from '../messages'
 import { UserProfileData, UserProfileRecord } from '../repository'
 

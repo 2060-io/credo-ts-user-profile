@@ -1,6 +1,2 @@
-export * from './CommunicationPolicyRecord'
-export * from './CommunicationPolicyRepository'
-export * from './CommunicationPolicyState'
-export * from './ConnectionAcceptancePolicy'
 export * from './UserProfileRecord'
 export * from './UserProfileRepository'

@@ -15,23 +15,15 @@ import { filter, firstValueFrom, map, Subject, timeout } from 'rxjs'
 import { UserProfileModule } from '../src/UserProfileModule'
 import { SubjectOutboundTransport } from './transport/SubjectOutboundTransport'
 import { SubjectInboundTransport } from './transport/SubjectInboundTransport'
-import { MessageState } from '../src/messages'
-import {
-  ConnectionProfileUpdatedEvent,
-  MessageReceiptsReceivedEvent,
-  ProfileEventTypes,
-  ReceiptsEventTypes,
-  RequestReceiptsReceivedEvent,
-  UserProfileRequestedEvent,
-} from '../src/services'
+import { ConnectionProfileUpdatedEvent, ProfileEventTypes, UserProfileRequestedEvent } from '../src/services'
 
 const logger = new ConsoleLogger(LogLevel.info)
 
 export type SubjectMessage = { message: EncryptedMessage; replySubject?: Subject<SubjectMessage> }
 
 describe('receipts test', () => {
-  let aliceAgent: Agent<{ profile: UserProfileModule }>
-  let bobAgent: Agent<{ profile: UserProfileModule }>
+  let aliceAgent: Agent<{ askar: AskarModule; profile: UserProfileModule }>
+  let bobAgent: Agent<{ askar: AskarModule; profile: UserProfileModule }>
   let aliceWalletId: string
   let aliceWalletKey: string
   let bobWalletId: string
@@ -151,7 +143,7 @@ describe('receipts test', () => {
   })
 
   test('Request profile', async () => {
-    const profileReceivedPromise = firstValueFrom(
+    const profileRequestedPromise = firstValueFrom(
       aliceAgent.events.observable<UserProfileRequestedEvent>(ProfileEventTypes.UserProfileRequested).pipe(
         filter((event: UserProfileRequestedEvent) => event.payload.connection.id === aliceConnectionRecord.id),
         map((event: UserProfileRequestedEvent) => event.payload.query),
@@ -161,7 +153,7 @@ describe('receipts test', () => {
 
     await bobAgent.modules.profile.requestUserProfile(bobConnectionRecord)
 
-    const profileRequestQuery = await profileReceivedPromise
+    const profileRequestQuery = await profileRequestedPromise
 
     expect(profileRequestQuery).toBeUndefined()
   })

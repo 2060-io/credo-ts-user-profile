@@ -1,5 +1,4 @@
 import { Lifecycle, scoped } from 'tsyringe'
-import { CommunicationPolicyRecord } from '../repository/CommunicationPolicyRecord'
 import {
   AgentContext,
   ConnectionRecord,
@@ -9,34 +8,29 @@ import {
 } from '@aries-framework/core'
 import { UserProfileRepository } from '../repository/UserProfileRepository'
 import { UserProfileRecord, UserProfileData } from '../repository/UserProfileRecord'
-import { RecordNotFoundError } from '@aries-framework/core'
-import { ConnectionAcceptancePolicy } from '../repository/ConnectionAcceptancePolicy'
 import {
   ConnectionProfileUpdatedEvent,
   ProfileEventTypes,
   UserProfileRequestedEvent,
   UserProfileUpdatedEvent,
 } from './UserProfileEvents'
-import { CommunicationPolicyService } from './CommunicationPolicyService'
 import { RequestProfileMessage, GetProfileMessageOptions, ProfileMessage, ProfileMessageOptions } from '../messages'
 import { getConnectionProfile, setConnectionProfile } from '../model'
+import { UserProfileModuleConfig } from '../UserProfileModuleConfig'
 
 @scoped(Lifecycle.ContainerScoped)
 export class UserProfileService {
   private userProfileRepository: UserProfileRepository
-  private communicationPolicyService: CommunicationPolicyService
   private connectionService: ConnectionService
   private eventEmitter: EventEmitter
   private _userProfileRecord?: UserProfileRecord
 
   public constructor(
     userProfileRepository: UserProfileRepository,
-    communicationPolicyService: CommunicationPolicyService,
     connectionService: ConnectionService,
     eventEmitter: EventEmitter
   ) {
     this.userProfileRepository = userProfileRepository
-    this.communicationPolicyService = communicationPolicyService
     this.connectionService = connectionService
     this.eventEmitter = eventEmitter
   }
@@ -53,7 +47,6 @@ export class UserProfileService {
     const previousUserProfileData = {
       displayName: userProfile.displayName,
       displayPicture: userProfile.displayPicture,
-      defaultCommunicationPolicyId: userProfile.defaultCommunicationPolicyId,
     }
 
     Object.assign(userProfile, props)
@@ -90,37 +83,12 @@ export class UserProfileService {
         userProfileRecord = new UserProfileRecord({
           id: this.userProfileRepository.DEFAULT_USER_PROFILE_RECORD,
         })
-
-        // Create default communication policy
-        const defaultCommPolicy = await this.communicationPolicyService.create(agentContext, {
-          displayName: 'default',
-          connectionAcceptance: ConnectionAcceptancePolicy.AutoAccept,
-          autoSendProfile: false,
-        })
-        userProfileRecord.defaultCommunicationPolicyId = defaultCommPolicy.id
         await this.userProfileRepository.save(agentContext, userProfileRecord)
       }
 
       this._userProfileRecord = userProfileRecord
     }
     return this._userProfileRecord
-  }
-
-  /**
-   * Retrieve default communication policy
-   *
-   * @throws {RecordNotFoundError} If no record is found
-   * @return The communication policy record
-   *
-   */
-  public async getDefaultCommunicationPolicy(agentContext: AgentContext): Promise<CommunicationPolicyRecord> {
-    const defaultCommunicationPolicyId = (await this.getUserProfile(agentContext)).defaultCommunicationPolicyId
-    if (!defaultCommunicationPolicyId) {
-      throw new RecordNotFoundError('Default communication policy not defined', {
-        recordType: CommunicationPolicyRecord.type,
-      })
-    }
-    return await this.communicationPolicyService.getById(agentContext, defaultCommunicationPolicyId)
   }
 
   public async processProfile(messageContext: InboundMessageContext<ProfileMessage>) {
@@ -161,8 +129,8 @@ export class UserProfileService {
         profile: getConnectionProfile(connection) ?? {},
       },
     })
-
-    if (messageContext.message.sendBackYours) {
+    const config = messageContext.agentContext.dependencyManager.resolve(UserProfileModuleConfig)
+    if (messageContext.message.sendBackYours && config.autoSendProfile) {
       return this.createProfileMessageAsReply(agentContext, connection, messageContext.message.threadId)
     }
   }
@@ -182,18 +150,6 @@ export class UserProfileService {
   public async processRequestProfile(messageContext: InboundMessageContext<RequestProfileMessage>) {
     const connection = messageContext.assertReadyConnection()
 
-    const policyId = (connection.getTag('communicationPolicyId') as string) ?? null
-    if (policyId) {
-      const policy = await this.communicationPolicyService.findById(messageContext.agentContext, policyId)
-
-      if (policy && policy.autoSendProfile) {
-        return await this.createProfileMessageAsReply(
-          messageContext.agentContext,
-          connection,
-          messageContext.message.threadId
-        )
-      }
-    }
     this.eventEmitter.emit<UserProfileRequestedEvent>(messageContext.agentContext, {
       type: ProfileEventTypes.UserProfileRequested,
       payload: {
@@ -201,6 +157,16 @@ export class UserProfileService {
         query: messageContext.message.query,
       },
     })
+
+    const config = messageContext.agentContext.dependencyManager.resolve(UserProfileModuleConfig)
+
+    if (config.autoSendProfile) {
+      return await this.createProfileMessageAsReply(
+        messageContext.agentContext,
+        connection,
+        messageContext.message.threadId
+      )
+    }
   }
 
   private async createProfileMessageAsReply(
