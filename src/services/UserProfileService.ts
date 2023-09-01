@@ -23,8 +23,7 @@ export class UserProfileService {
   private userProfileRepository: UserProfileRepository
   private connectionService: ConnectionService
   private eventEmitter: EventEmitter
-  private _userProfileRecord?: UserProfileRecord
-
+  
   public constructor(
     userProfileRepository: UserProfileRepository,
     connectionService: ConnectionService,
@@ -51,8 +50,6 @@ export class UserProfileService {
 
     Object.assign(userProfile, props)
     await this.userProfileRepository.update(agentContext, userProfile)
-    // Update internal state
-    this._userProfileRecord = userProfile
 
     this.eventEmitter.emit<UserProfileUpdatedEvent>(agentContext, {
       type: ProfileEventTypes.UserProfileUpdated,
@@ -72,23 +69,20 @@ export class UserProfileService {
    * @returns User Profile Record
    */
   public async getUserProfile(agentContext: AgentContext): Promise<UserProfileRecord> {
-    if (!this._userProfileRecord) {
-      let userProfileRecord = await this.userProfileRepository.findById(
+    let userProfileRecord = await this.userProfileRepository.findById(
         agentContext,
         this.userProfileRepository.DEFAULT_USER_PROFILE_RECORD
       )
 
-      // If we don't have an user profile record yet, create it
-      if (!userProfileRecord) {
-        userProfileRecord = new UserProfileRecord({
-          id: this.userProfileRepository.DEFAULT_USER_PROFILE_RECORD,
-        })
-        await this.userProfileRepository.save(agentContext, userProfileRecord)
-      }
-
-      this._userProfileRecord = userProfileRecord
+    // If we don't have an user profile record yet, create it
+    if (!userProfileRecord) {
+      userProfileRecord = new UserProfileRecord({
+        id: this.userProfileRepository.DEFAULT_USER_PROFILE_RECORD,
+      })
+      await this.userProfileRepository.save(agentContext, userProfileRecord)
     }
-    return this._userProfileRecord
+
+    return userProfileRecord
   }
 
   public async processProfile(messageContext: InboundMessageContext<ProfileMessage>) {

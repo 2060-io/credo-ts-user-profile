@@ -1,7 +1,8 @@
 export * from './UserProfileApi'
 export * from './UserProfileModule'
 export * from './UserProfileModuleConfig'
-export * from './handlers'
 export * from './messages'
 export * from './repository'
 export * from './services'
+export * from './model'
+
