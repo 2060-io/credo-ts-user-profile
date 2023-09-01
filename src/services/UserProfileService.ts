@@ -23,7 +23,7 @@ export class UserProfileService {
   private userProfileRepository: UserProfileRepository
   private connectionService: ConnectionService
   private eventEmitter: EventEmitter
-  
+
   public constructor(
     userProfileRepository: UserProfileRepository,
     connectionService: ConnectionService,
@@ -70,9 +70,9 @@ export class UserProfileService {
    */
   public async getUserProfile(agentContext: AgentContext): Promise<UserProfileRecord> {
     let userProfileRecord = await this.userProfileRepository.findById(
-        agentContext,
-        this.userProfileRepository.DEFAULT_USER_PROFILE_RECORD
-      )
+      agentContext,
+      this.userProfileRepository.DEFAULT_USER_PROFILE_RECORD
+    )
 
     // If we don't have an user profile record yet, create it
     if (!userProfileRecord) {
