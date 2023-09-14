@@ -1,7 +1,18 @@
-export interface DisplayPictureData {
+export interface PictureData {
   mimeType?: string
   links?: string[]
   base64?: string
+}
+
+export interface UserProfileData {
+  displayName?: string
+  displayPicture?: PictureData
+  displayIcon?: PictureData
+  description?: string
+  organizationDid?: string
+  organizationName?: string
+  registrarDid?: string
+  registrarName?: string
 }
 
 export class UserProfile {

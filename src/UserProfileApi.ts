@@ -1,13 +1,7 @@
-import {
-  injectable,
-  MessageSender,
-  AgentContext,
-  ConnectionRecord,
-  OutboundMessageContext,
-} from '@aries-framework/core'
+import { injectable, MessageSender, AgentContext, OutboundMessageContext, ConnectionsApi } from '@aries-framework/core'
 import { ProfileHandler, RequestProfileHandler } from './handlers'
-import { UserProfileData } from './repository'
 import { UserProfileService } from './services'
+import { UserProfileData } from './model'
 
 @injectable()
 export class UserProfileApi {
@@ -26,7 +20,15 @@ export class UserProfileApi {
     ])
   }
 
-  public async requestUserProfile(connection: ConnectionRecord) {
+  /**
+   * Request the user profile for a given connection. It will store received UserProfileData into ConnectionRecord metadata
+   * (`UserProfile` key).
+   *
+   * @param options
+   */
+  public async requestUserProfile(options: { connectionId: string }) {
+    const connection = await this.agentContext.dependencyManager.resolve(ConnectionsApi).getById(options.connectionId)
+
     const message = await this.userProfileService.createRequestProfileMessage({})
 
     await this.messageSender.sendMessage(
@@ -34,10 +36,25 @@ export class UserProfileApi {
     )
   }
 
-  public async sendUserProfile(connection: ConnectionRecord, sendBackYours?: boolean) {
+  /**
+   * Sends User Profile to a given connection. It will send our own stored profile data if `profileData` is not specified.
+   *
+   * Note: to specify a profileData here does not mean that it will persist and be used in further profile data sharing. It
+   * is meant in case we want to send diferent profiles to each connection or update it according to the context.
+   *
+   * @param options
+   */
+  public async sendUserProfile(options: {
+    connectionId: string
+    profileData?: Partial<UserProfileData>
+    sendBackYours?: boolean
+  }) {
+    const { connectionId, profileData, sendBackYours } = options
+    const connection = await this.agentContext.dependencyManager.resolve(ConnectionsApi).getById(connectionId)
+
     const myProfile = await this.userProfileService.getUserProfile(this.agentContext)
     const message = await this.userProfileService.createProfileMessage({
-      profile: {
+      profile: profileData ?? {
         displayName: myProfile.displayName,
         displayPicture: myProfile.displayPicture,
         description: myProfile.description,
@@ -62,6 +79,11 @@ export class UserProfileApi {
     return await this.getUserProfileData()
   }
 
+  /**
+   * Retrieve our User Profile Data from storage.
+   *
+   * @returns our own UserProfileData
+   */
   public async getUserProfileData(): Promise<UserProfileData> {
     const userProfile = await this.userProfileService.getUserProfile(this.agentContext)
     return {

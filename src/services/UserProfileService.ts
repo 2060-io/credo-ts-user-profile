@@ -6,8 +6,8 @@ import {
   EventEmitter,
   InboundMessageContext,
 } from '@aries-framework/core'
-import { UserProfileRepository } from '../repository/UserProfileRepository'
-import { UserProfileRecord, UserProfileData } from '../repository/UserProfileRecord'
+import { UserProfileRepository, UserProfileRecord } from '../repository'
+import { UserProfileData } from '../model'
 import {
   ConnectionProfileUpdatedEvent,
   ProfileEventTypes,
@@ -97,14 +97,27 @@ export class UserProfileService {
       ? messageContext.message.getAppendedAttachmentById('displayPicture')
       : undefined
 
+    const displayIconData = receivedProfile.displayIcon
+      ? messageContext.message.getAppendedAttachmentById('displayIcon')
+      : undefined
+
     // TODO: use composed objects
     const newProfile: UserProfileData = {
       ...receivedProfile,
-      displayPicture: {
-        mimeType: displayPictureData?.mimeType,
-        base64: displayPictureData?.data.base64,
-        links: displayPictureData?.data.links,
-      },
+      displayPicture: displayPictureData
+        ? {
+            mimeType: displayPictureData?.mimeType,
+            base64: displayPictureData?.data.base64,
+            links: displayPictureData?.data.links,
+          }
+        : currentProfile?.displayPicture,
+      displayIcon: displayIconData
+        ? {
+            mimeType: displayIconData?.mimeType,
+            base64: displayIconData?.data.base64,
+            links: displayIconData?.data.links,
+          }
+        : currentProfile?.displayIcon,
     }
     if (currentProfile) {
       Object.assign(currentProfile, newProfile)
