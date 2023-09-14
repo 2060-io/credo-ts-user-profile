@@ -151,8 +151,14 @@ describe('profile test', () => {
       )
     )
 
-    await bobAgent.modules.profile.sendUserProfile({ connectionId: bobConnectionRecord!.id, profileData: {
-      displayIcon: { base64: 'base64' }, organizationDid: 'orgDid' }, sendBackYours: false })
+    await bobAgent.modules.profile.sendUserProfile({
+      connectionId: bobConnectionRecord!.id,
+      profileData: {
+        displayIcon: { base64: 'base64' },
+        organizationDid: 'orgDid',
+      },
+      sendBackYours: false,
+    })
 
     const profile = await profileReceivedPromise
 
