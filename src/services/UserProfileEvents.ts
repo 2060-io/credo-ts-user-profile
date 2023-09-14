@@ -1,6 +1,7 @@
 import { BaseEvent, ConnectionRecord } from '@aries-framework/core'
 import { ConnectionProfileKey } from '../messages'
-import { UserProfileData, UserProfileRecord } from '../repository'
+import { UserProfileData } from '../model'
+import { UserProfileRecord } from '../repository'
 
 export enum ProfileEventTypes {
   UserProfileUpdated = 'UserProfileUpdated',

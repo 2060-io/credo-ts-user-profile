@@ -1,21 +1,16 @@
 import { BaseRecord } from '@aries-framework/core'
-import { DisplayPictureData } from '../model'
+import { UserProfileData, PictureData } from '../model'
 import { v4 as uuid } from 'uuid'
-
-export interface UserProfileData {
-  displayName?: string
-  displayPicture?: DisplayPictureData
-  description?: string
-}
 
 export interface UserProfileStorageProps extends UserProfileData {
   id?: string
   createdAt?: Date
 }
 
+// TODO: Store more data than display name, display picture and description
 export class UserProfileRecord extends BaseRecord implements UserProfileStorageProps {
   public displayName?: string
-  public displayPicture?: DisplayPictureData
+  public displayPicture?: PictureData
   public description?: string
 
   public static readonly type = 'UserProfileRecord'

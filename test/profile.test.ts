@@ -21,7 +21,7 @@ const logger = new ConsoleLogger(LogLevel.info)
 
 export type SubjectMessage = { message: EncryptedMessage; replySubject?: Subject<SubjectMessage> }
 
-describe('receipts test', () => {
+describe('profile test', () => {
   let aliceAgent: Agent<{ askar: AskarModule; profile: UserProfileModule }>
   let bobAgent: Agent<{ askar: AskarModule; profile: UserProfileModule }>
   let aliceWalletId: string
@@ -115,7 +115,7 @@ describe('receipts test', () => {
     }
   })
 
-  test('Send profile', async () => {
+  test('Send stored profile', async () => {
     const profileReceivedPromise = firstValueFrom(
       aliceAgent.events.observable<ConnectionProfileUpdatedEvent>(ProfileEventTypes.ConnectionProfileUpdated).pipe(
         filter((event: ConnectionProfileUpdatedEvent) => event.payload.connection.id === aliceConnectionRecord.id),
@@ -129,7 +129,7 @@ describe('receipts test', () => {
       displayName: 'Bob',
       displayPicture: { mimeType: 'image/png', links: ['http://download'] },
     })
-    await bobAgent.modules.profile.sendUserProfile(bobConnectionRecord!, false)
+    await bobAgent.modules.profile.sendUserProfile({ connectionId: bobConnectionRecord!.id, sendBackYours: false })
 
     const profile = await profileReceivedPromise
 
@@ -138,6 +138,28 @@ describe('receipts test', () => {
         displayName: 'Bob',
         description: 'My bio',
         displayPicture: { mimeType: 'image/png', links: ['http://download'] },
+      })
+    )
+  })
+
+  test('Send custom profile', async () => {
+    const profileReceivedPromise = firstValueFrom(
+      aliceAgent.events.observable<ConnectionProfileUpdatedEvent>(ProfileEventTypes.ConnectionProfileUpdated).pipe(
+        filter((event: ConnectionProfileUpdatedEvent) => event.payload.connection.id === aliceConnectionRecord.id),
+        map((event: ConnectionProfileUpdatedEvent) => event.payload.profile),
+        timeout(5000)
+      )
+    )
+
+    await bobAgent.modules.profile.sendUserProfile({ connectionId: bobConnectionRecord!.id, profileData: {
+      displayIcon: { base64: 'base64' }, organizationDid: 'orgDid' }, sendBackYours: false })
+
+    const profile = await profileReceivedPromise
+
+    expect(profile).toEqual(
+      expect.objectContaining({
+        organizationDid: 'orgDid',
+        displayIcon: { base64: 'base64' },
       })
     )
   })
@@ -151,7 +173,7 @@ describe('receipts test', () => {
       )
     )
 
-    await bobAgent.modules.profile.requestUserProfile(bobConnectionRecord)
+    await bobAgent.modules.profile.requestUserProfile({ connectionId: bobConnectionRecord.id })
 
     const profileRequestQuery = await profileRequestedPromise
 
