@@ -7,7 +7,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "aries-javascript-user-profile/*": ["src"]
+      "credo-ts-user-profile/*": ["src"]
     },
     "types": ["jest", "node"],
     "watch": true

@@ -1,4 +1,4 @@
-import { injectable, MessageSender, AgentContext, OutboundMessageContext, ConnectionsApi } from '@aries-framework/core'
+import { injectable, MessageSender, AgentContext, OutboundMessageContext, ConnectionsApi } from '@credo-ts/core'
 import { ProfileHandler, RequestProfileHandler } from './handlers'
 import { UserProfileService } from './services'
 import { UserProfileData } from './model'

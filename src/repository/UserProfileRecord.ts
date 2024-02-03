@@ -1,4 +1,4 @@
-import { BaseRecord } from '@aries-framework/core'
+import { BaseRecord } from '@credo-ts/core'
 import { UserProfileData, PictureData } from '../model'
 import { v4 as uuid } from 'uuid'
 

@@ -1,4 +1,4 @@
-import { ConnectionRecord } from '@aries-framework/core'
+import { ConnectionRecord } from '@credo-ts/core'
 import { UserProfileData } from '../model'
 
 export const getConnectionProfile = (record: ConnectionRecord) =>

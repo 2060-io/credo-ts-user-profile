@@ -1,4 +1,4 @@
-import { AgentMessage, Attachment, IsValidMessageType, parseMessageType } from '@aries-framework/core'
+import { AgentMessage, Attachment, IsValidMessageType, parseMessageType } from '@credo-ts/core'
 import { Expose } from 'class-transformer'
 import { IsBoolean, IsOptional } from 'class-validator'
 import { UserProfile, UserProfileData } from '../model'

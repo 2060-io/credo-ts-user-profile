@@ -1,5 +1,5 @@
-import { EventEmitter, InjectionSymbols } from '@aries-framework/core'
-import { Repository, StorageService } from '@aries-framework/core'
+import { EventEmitter, InjectionSymbols } from '@credo-ts/core'
+import { Repository, StorageService } from '@credo-ts/core'
 import { inject, scoped, Lifecycle } from 'tsyringe'
 import { UserProfileRecord } from './UserProfileRecord'
 

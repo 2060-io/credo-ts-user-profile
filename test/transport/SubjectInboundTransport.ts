@@ -7,7 +7,7 @@ import {
   TransportService,
   TransportSession,
   utils,
-} from '@aries-framework/core'
+} from '@credo-ts/core'
 import type { Subscription } from 'rxjs'
 
 import { Subject } from 'rxjs'

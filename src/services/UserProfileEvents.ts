@@ -1,4 +1,4 @@
-import { BaseEvent, ConnectionRecord } from '@aries-framework/core'
+import { BaseEvent, ConnectionRecord } from '@credo-ts/core'
 import { ConnectionProfileKey } from '../messages'
 import { UserProfileData } from '../model'
 import { UserProfileRecord } from '../repository'

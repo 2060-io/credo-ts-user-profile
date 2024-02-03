@@ -1,4 +1,4 @@
-import { MessageHandler, MessageHandlerInboundMessage, OutboundMessageContext } from '@aries-framework/core'
+import { MessageHandler, MessageHandlerInboundMessage, OutboundMessageContext } from '@credo-ts/core'
 import { ProfileMessage } from '../messages'
 import { UserProfileService } from '../services'
 

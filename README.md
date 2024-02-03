@@ -5,7 +5,7 @@ This module is used to provide an Aries Agent built with Aries Framework JavaScr
 It's conceived as an extension module for Aries Framework JavaScript which can be injected to an existing agent instance:
 
 ```ts
-import { UserProfileModule } from 'aries-javascript-user-profile'
+import { UserProfileModule } from 'credo-ts-user-profile'
 
 const agent = new Agent({
   config: {

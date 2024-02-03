@@ -1,9 +1,9 @@
 {
-  "name": "aries-framework-user-profile",
+  "name": "credo-ts-user-profile",
   "version": "0.0.0",
-  "description": "User Profile protocol implementation for aries-framework-javascript",
+  "description": "User Profile protocol implementation for credo-ts-javascript",
   "author": "2060.io",
-  "homepage": "https://github.com/2060-io/aries-javascript-receipts",
+  "homepage": "https://github.com/2060-io/credo-ts-receipts",
   "license": "ISC",
   "main": "build/index.js",
   "types": "build/index.js",
@@ -23,22 +23,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/2060-io/aries-javascript-user-profile"
+    "url": "https://github.com/2060-io/credo-ts-user-profile"
   },
   "bugs": {
-    "url": "https://github.com/2060-io/aries-javascript-user-profile/issues"
+    "url": "https://github.com/2060-io/credo-ts-user-profile/issues"
   },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
-    "@aries-framework/askar": "^0.4.0",
-    "@aries-framework/node": "^0.4.0",
-    "@hyperledger/aries-askar-nodejs": "^0.1.0",
+    "@credo-ts/askar": "^0.5.0-alpha.116",
+    "@credo-ts/node": "^0.5.0-alpha.116",
+    "@hyperledger/aries-askar-nodejs": "^0.2.0-dev.6",
     "@types/jest": "^26.0.23",
-    "@types/node": "^16.11.7",
-    "@types/node-fetch": "^2.6.4",
+    "@types/node": "^20.11.16",
     "@types/uuid": "^9.0.0",
     "@typescript-eslint/eslint-plugin": "^5.48.1",
     "@typescript-eslint/parser": "^5.48.1",
@@ -51,16 +50,13 @@
     "typescript": "~4.9.4"
   },
   "dependencies": {
-    "@aries-framework/core": "^0.4.0",
+    "@credo-ts/core": "^0.5.0-alpha.116",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
-    "tsyringe": "^4.7.0",
+    "tsyringe": "^4.8.0",
     "uuid": "^9.0.0"
-  },
-  "resolutions": {
-    "ref-napi": "npm:@2060.io/ref-napi"
   },
   "release-it": {
     "github": {

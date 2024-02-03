@@ -5,10 +5,10 @@ import type {
   RecordUpdatedEvent,
   Agent,
   BaseEvent,
-} from '@aries-framework/core'
-import type { Constructor } from '@aries-framework/core/build/utils/mixins'
+} from '@credo-ts/core'
+import type { Constructor } from '@credo-ts/core/build/utils/mixins'
 
-import { RepositoryEventTypes } from '@aries-framework/core'
+import { RepositoryEventTypes } from '@credo-ts/core'
 import { map, filter, pipe } from 'rxjs'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

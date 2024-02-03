@@ -1,11 +1,5 @@
 import { Lifecycle, scoped } from 'tsyringe'
-import {
-  AgentContext,
-  ConnectionRecord,
-  ConnectionService,
-  EventEmitter,
-  InboundMessageContext,
-} from '@aries-framework/core'
+import { AgentContext, ConnectionRecord, ConnectionService, EventEmitter, InboundMessageContext } from '@credo-ts/core'
 import { UserProfileRepository, UserProfileRecord } from '../repository'
 import { UserProfileData } from '../model'
 import {
